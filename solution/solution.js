@@ -9,8 +9,9 @@ const sortTypes = ["mr", "sd", "ra", "pa"];
 let apiUrl = "https://devpost.com/api/hackathons";
 
 // Get proper api url based on sort type
-const getApiUrl = (sortType) => {
+const initApiUrl = (sortType) => {
     let baseUrl = "https://devpost.com/api/hackathons";
+    // Check for the different sort types from the prompt and change url accordingly
     switch (sortType) {
         case "mr":
             return baseUrl;
@@ -28,7 +29,7 @@ const getApiUrl = (sortType) => {
 }
 
 // Get hackathons
-const getHackathons = async () => {
+const fetchHackathons = async () => {
     const apiUrl = "https://devpost.com/api/hackathons";
     try {
         const response = await fetch(apiUrl);
@@ -48,14 +49,18 @@ const getHackathons = async () => {
 // Command Line User Interface
 console.log("Hello! Welcome to the DevPost Hackathons API CLI!");
 while (solution_running) {
-    let sortTypePrompt = prompt("How would you like to sort your hackathons? (Most Relevant - mr, Submission date - sd, Recently added - ra, Prize amount - pa): ");
+    let sortTypePrompt = prompt("How would you like to sort your hackathons? (most relevant - mr, submission date - sd, recently added - ra, prize amount - pa): ");
+    // Validate prompt input
     if (!sortTypes.includes(sortTypePrompt)) {
-        console.log("Please try again! Type the characters after the dash after the way in which wyou would like to sort your hackathons!");
+        // Tell user to try again
+        console.log("Please try again! Type the characters after the dash after the way in which you would like to sort your hackathons!");
         continue
     } else {
-        apiUrl = getApiUrl(sortTypePrompt);
-        const hackathonsData = getHackathons()
-        console.log("Here is your data: \n" + hackathonsData);
+        // Fetch and print out data
+        apiUrl = initApiUrl(sortTypePrompt);
+        console.log("Here is your data:")
+        const hackathonsData = await fetchHackathons()
+        console.log(hackathonsData);
         console.log("Thank you for using the DevPost Hackathons API CLI!");
         solution_running = false
     }
